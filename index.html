@@ -2,39 +2,291 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ICT Materyalleri | Naz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hesap Adresi Ustası</title>
 <style>
-:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e6eaf0;--accent:#2563eb}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
-header{padding:56px 24px 42px;background:linear-gradient(135deg,#183b73,#2563eb);color:#fff}
-.wrap{max-width:1000px;margin:auto}h1{margin:0 0 10px;font-size:42px}header p{margin:0;max-width:680px;font-size:18px;line-height:1.5}
-main{padding:36px 24px 60px}.section{margin-bottom:32px}.section h2{font-size:24px;margin:0 0 16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;text-decoration:none;color:inherit;box-shadow:0 5px 18px rgba(16,24,40,.05);transition:.15s}
-.card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(16,24,40,.09)}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eaf2ff;color:#1854b8;font-size:13px;font-weight:700;margin-bottom:12px}
-.card h3{margin:0 0 8px;font-size:20px}.card p{margin:0;color:var(--muted);line-height:1.5}
-footer{max-width:1000px;margin:0 auto;padding:0 24px 32px;color:var(--muted);font-size:13px}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;color:#20385d;background:#dff4ff}
+.screen{display:none;min-height:100vh;padding:10px}
+.screen.active{display:flex;align-items:center;justify-content:center}
+.card{position:relative;width:min(1500px,98vw);height:min(930px,calc(100vh - 20px));border-radius:30px;overflow:hidden}
+.hero{background:#fff;padding:34px;text-align:center;overflow:hidden;box-shadow:0 18px 45px rgba(50,76,125,.16)}
+.big{font-size:68px}h1{font-size:clamp(38px,6vw,62px);margin:6px 0 12px;color:#284b82}h2{font-size:clamp(27px,2.9vw,36px);margin:3px 0 6px;color:#203d68}p{font-size:19px;line-height:1.35}
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}.rule{padding:16px;border-radius:18px;background:#f2f6ff;font-weight:800}.rule b{display:block;font-size:28px;margin-bottom:7px}
+.primary{border:0;border-radius:16px;padding:10px 20px;cursor:pointer;background:#2f8bea;color:#fff;font-size:17px;font-weight:900;box-shadow:0 7px 15px rgba(47,139,234,.24);transition:.15s}.primary:hover{transform:translateY(-2px)}
+#game .card{background:transparent;box-shadow:none;padding:0}
+.progress{position:absolute;z-index:5;top:30px;left:22%;width:61%;display:flex;gap:7px;margin:0}.dot{height:9px;flex:1;border-radius:10px;background:#dbe3f1;box-shadow:inset 0 1px 2px rgba(40,60,90,.08)}.dot.on{background:#4e6fd2}
+.game-stage{position:absolute;inset:0;background:#fff url('game_background_3d.png') center/100% 100% no-repeat;border-radius:30px;overflow:hidden}
+.game-inner{position:absolute;left:18.5%;top:8%;width:65%;height:88%;display:grid;grid-template-columns:minmax(0,1fr) 225px;gap:20px;align-items:start}
+.main-panel{min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 0 4px;overflow:hidden}.side-panel{min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-start;padding-top:65px}.level-tag{display:inline-block;padding:5px 14px;border-radius:24px;background:#eef3ff;color:#4d67c7;font-weight:900;margin-bottom:4px}.question{width:100%;min-width:0}.question>p{margin:4px 0 6px}.email{font-family:Consolas,monospace;font-size:clamp(16px,1.65vw,23px);background:#f4f7fb;padding:9px 12px;border-radius:13px;word-break:break-all;margin:6px auto;max-width:100%;border:1px solid #e3eaf5;box-shadow:0 2px 8px rgba(55,75,105,.05)}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:9px auto 0;width:100%}.option{min-height:52px;border:3px solid transparent;border-radius:17px;padding:8px 11px;cursor:pointer;font-size:15px;font-weight:850;color:#20385d;box-shadow:0 4px 12px rgba(36,50,74,.08);transition:transform .15s,box-shadow .15s,filter .15s}.option:nth-child(1){background:#dceeff;border-color:#c2ddf8}.option:nth-child(2){background:#eee3ff;border-color:#d7c5f5}.option:nth-child(3){background:#dff6e9;border-color:#bfe5d1}.option:nth-child(4){background:#ffe9d6;border-color:#f1d0ad}.option:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 15px rgba(36,50,74,.13)}.option:disabled{cursor:default;opacity:1}.option.correct{background:#dff7e7!important;border-color:#3fb56b!important;animation:correctPop .35s ease-out}.option.wrong{background:#ffe7e2!important;border-color:#e46d5e!important;animation:wrongShake .35s ease-out}@keyframes correctPop{0%{transform:scale(1)}55%{transform:scale(1.045)}100%{transform:scale(1)}}@keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.feedback{display:none;min-height:52px;width:100%;margin:7px auto 5px;padding:8px 12px;border-radius:17px;border:3px solid;align-items:center;justify-content:center;text-align:center;font-size:14px;font-weight:900;line-height:1.25;box-shadow:0 8px 20px rgba(35,55,90,.13)}.feedback.show{display:flex;animation:feedbackPop .32s ease-out}.feedback.success{background:#e6f8ed;border-color:#49b96e;color:#176f3a}.feedback.error{background:#fff0e8;border-color:#f09a57;color:#a94b18}@keyframes feedbackPop{0%{opacity:0;transform:scale(.88)}65%{opacity:1;transform:scale(1.04)}100%{opacity:1;transform:scale(1)}}
+.action-area{width:100%;display:flex;justify-content:center;min-height:50px;margin-top:5px;padding:4px 0 2px;background:rgba(255,255,255,.96);border-radius:16px}.next{display:none;margin:0 auto}.field{width:100%;padding:9px 12px;border:3px solid #cfd8e6;border-radius:16px;font-family:Consolas,monospace;font-size:17px;text-align:center;outline:none}.field:focus{border-color:#6c92dc;box-shadow:0 0 0 4px #dfe8fb}.hint{width:100%;margin:6px auto 0;padding:7px 10px;background:#fff4bd;border:2px solid #efd98e;border-radius:14px;font-weight:800;font-size:13px}.keytip{display:inline-flex;align-items:center;gap:8px;background:#edf7ff;border:2px solid #b9dcf3;border-radius:14px;padding:4px 9px;margin:3px auto;font-weight:900}.key{display:inline-flex;min-width:38px;height:28px;padding:0 8px;align-items:center;justify-content:center;border:2px solid #7e8da4;border-bottom-width:4px;border-radius:8px;background:#fff;font-size:14px;font-weight:900}.key.wide{min-width:62px}.plus{font-size:18px}.small{font-size:15px;color:#69758a}.score{font-size:32px;color:#4d67c7}
+.tip-card{background:#fff4b8;border:2px solid #efd889;border-radius:20px;padding:15px;box-shadow:0 8px 18px rgba(90,75,30,.13);font-size:14px;line-height:1.35;font-weight:800}.tip-card b{display:block;font-size:19px;margin-bottom:7px}.tip-card ul{margin:7px 0 0;padding-left:18px}.tip-card li{margin:5px 0}.side-label{margin-top:10px;background:rgba(255,255,255,.96);border:2px solid #e4ebf6;border-radius:14px;padding:9px;text-align:center;font-size:12px;font-weight:800;color:#64738c;box-shadow:0 5px 12px rgba(60,80,110,.08)}
+@media(max-width:1000px){.game-inner{left:15%;width:72%;grid-template-columns:minmax(0,1fr) 190px;gap:12px}.progress{left:20%;width:64%}.option{font-size:14px}.tip-card{font-size:12px;padding:12px}.side-label{font-size:11px}}
+@media(max-width:760px){.screen{padding:6px}.card{height:calc(100vh - 12px);border-radius:20px}.game-stage{background:#eaf7ff}.game-inner{position:relative;left:auto;top:auto;width:auto;height:100%;padding:66px 14px 12px;display:block;overflow:hidden}.side-panel{padding-top:10px;margin-top:14px}.progress{left:7%;width:86%}.main-panel{height:auto;padding:0}.options{grid-template-columns:1fr}.feedback{font-size:16px}}
 </style>
 </head>
 <body>
-<header><div class="wrap">
-<h1>ICT Materyalleri</h1>
-<p>ICT dersleri için hazırlanan etkileşimli oyunlar, etkinlikler ve dijital materyaller.</p>
-</div></header>
-<main class="wrap">
-<section class="section">
-<h2>Etkinlikler ve Oyunlar</h2>
-<div class="grid">
-<a class="card" href="./teknolojik-urun/">
-<span class="badge">🎮 Oyun</span>
-<h3>Teknolojik Ürün Müdür, Değil midir?</h3>
-<p>Teknolojik ürünleri tanımaya yönelik etkileşimli sınıflandırma oyunu.</p>
-</a>
-</div>
+
+<section id="home" class="screen active">
+  <div class="card hero">
+    <div class="big">🧑‍💻✨</div>
+    <h1>Hesap Adresi Ustası</h1>
+    <p>Okul hesabını doğru yazmayı öğren, hataları yakala ve klavyede ustala!</p>
+    <div class="rules">
+      <div class="rule"><b>🔤</b>Küçük harf</div>
+      <div class="rule"><b>🚫</b>Türkçe karakter yok</div>
+      <div class="rule"><b>•</b>İsim.soyisim</div>
+      <div class="rule"><b>⬅️</b>Boşluk yok</div>
+    </div>
+    <div class="keytip"><span class="key wide">AltGr</span><span class="plus">+</span><span class="key">Q</span><span>→ @</span></div>
+    <p class="small">Türkçe Q klavyede <b>@</b> işareti için <b>AltGr + Q</b> tuşlarına birlikte bas.</p>
+    <button class="primary" onclick="startGame()">Oyuna Başla 🚀</button>
+    <p class="small">Adreslerin sonu: <b>@student.cakir.k12.tr</b></p>
+  </div>
 </section>
-</main>
-<footer>© ICT Materyalleri · Öğren → Tasarla → Üret → Uygula → Değerlendir → Geliştir</footer>
+
+<section id="game" class="screen">
+  <div class="card">
+    <div class="progress" id="progress"></div>
+    <div class="game-stage">
+      <div class="game-inner">
+        <main class="main-panel"><div id="content"></div></main>
+        <aside class="side-panel">
+          <div class="tip-card"><b>💡 İpucu</b><ul><li>Tüm harfler küçük olmalı.</li><li>Türkçe karakter kullanma.</li><li>İsim ile soyisim arasına nokta koy.</li><li>Boşluk bırakma.</li><li>@ için <b>AltGr + Q</b></li></ul></div>
+          <div class="side-label">Kuralları hatırla, sonra seçimini yap! 🌟</div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="finish" class="screen">
+  <div class="card hero">
+    <div class="big">🏆</div>
+    <h2>Hesap Adresi Ustası!</h2>
+    <p id="finalText"></p>
+    <button class="primary" onclick="startGame()">Tekrar Oyna 🔄</button>
+    <button class="primary" style="margin-left:8px;background:#7b879f" onclick="show('home')">Ana Menü</button>
+  </div>
+</section>
+
+<script>
+const DOMAIN='@student.cakir.k12.tr';
+let level=0, score=0, answered=false;
+
+const levels=[
+{
+ title:'1. Seviye — Doğru Adresi Bul 🔎', kind:'mc',
+ questions:[
+  {q:'Naz Sevinç',options:['naz.sevinc'+DOMAIN,'Naz.Sevinc'+DOMAIN,'naz sevinc'+DOMAIN,'naz.sevinç'+DOMAIN],correct:0,
+   good:'Doğru! Küçük harf kullandın, nokta koydun ve Türkçe karakter kullanmadın.',
+   bad:'İpucu: Küçük harf kullan, boşluk bırakma ve Türkçe karakter kullanma.'},
+  {q:'Ali Can Demir',options:['ali.can.demir'+DOMAIN,'ali.candemir'+DOMAIN,'ali.demir'+DOMAIN,'Ali.demir'+DOMAIN],correct:2,
+   good:'Doğru! Birden fazla isim varsa yalnızca ilk isim kullanılır.',
+   bad:'İpucu: Birden fazla isim varsa ilk isim + soyisim kullanılır.'},
+  {q:'İpek Şahin',options:['ipek.sahin'+DOMAIN,'ipek.şahin'+DOMAIN,'Ipek.sahin'+DOMAIN,'ipek sahin'+DOMAIN],correct:0,
+   good:'Harika! Şahin yazarken ş yerine s kullandın.',
+   bad:'İpucu: Türkçe karakter kullanma. ş → s.'}
+ ]
+},
+{
+ title:'2. Seviye — Hatalıyı Yakala 🕵️', kind:'error',
+ questions:[
+  {address:'Naz.sevinc'+DOMAIN,options:['Büyük harf var','Türkçe karakter var','Boşluk var','Hata yok'],correct:0,
+   good:'Evet! “Naz” içinde büyük N var.',bad:'İpucu: Harflerin hepsi küçük olmalı.'},
+  {address:'naz.sevinç'+DOMAIN,options:['Büyük harf var','Türkçe karakter var','Boşluk var','Hata yok'],correct:1,
+   good:'Doğru! “ç” yerine “c” yazılmalı.',bad:'İpucu: Türkçe karakterlere dikkat et.'},
+  {address:'naz sevinc'+DOMAIN,options:['Büyük harf var','Türkçe karakter var','Boşluk var','Hata yok'],correct:2,
+   good:'Doğru! İsim ile soyisim arasında boşluk değil nokta olmalı.',bad:'İpucu: İsim.soyisim şeklinde yazılır.'},
+  {address:'naz.sevinc'+DOMAIN,options:['Büyük harf var','Türkçe karakter var','Boşluk var','Hata yok'],correct:3,
+   good:'Harika! Bu adres kurallara uygun.',bad:'Bu adres doğru görünüyor; “Hata yok” seçeneğini ara.'}
+ ]
+},
+{
+ title:'3. Seviye — Adresi Parçala 🧩', kind:'parts',
+ questions:[
+  {address:'ada.su'+DOMAIN,prompt:'Bu adreste soyisim hangisidir?',options:['ada','su','@','student.cakir.k12.tr'],correct:1,
+   good:'Doğru! Soyisim “Su”.',bad:'İpucu: Noktadan sonraki bölüm soyisimdir.'},
+  {address:'zeynep.celik'+DOMAIN,prompt:'Bu adreste ilk isim hangisidir?',options:['zeynep','celik','@','k12'],correct:0,
+   good:'Doğru! İlk isim “Zeynep”.',bad:'İpucu: Noktadan önceki ilk bölüm ilk isimdir.'},
+  {address:'omer.kaya'+DOMAIN,prompt:'Bu adreste alan adı hangisidir?',options:['omer','kaya','@student.cakir.k12.tr','omer.kaya'],correct:2,
+   good:'Doğru! Alan adı @ işaretinden sonra gelir.',bad:'İpucu: @ işaretinden sonraki bölüme bak.'}
+ ]
+},
+{
+ title:'4. Seviye — Adresi Tamamla ✍️', kind:'input',
+ questions:[
+  {name:'Zeynep Ela Çelik',correct:'zeynep.celik'+DOMAIN,tip:'Birden fazla isim varsa yalnızca ilk isim kullanılır.'},
+  {name:'Şule Özdemir',correct:'sule.ozdemir'+DOMAIN,tip:'ş → s, ö → o'},
+  {name:'Ömer Faruk Kaya',correct:'omer.kaya'+DOMAIN,tip:'İlk isim + soyisim kuralını hatırla.'},
+  {name:'Ada Su Çelik',correct:'ada.celik'+DOMAIN,tip:'Ada Su → yalnızca ilk isim olan Ada kullanılır.'}
+ ]
+},
+{
+ title:'5. Seviye — @ İşaretini Öğren ⌨️', kind:'at',
+ questions:[
+  {prompt:'@ işaretini hangi tuşlarla yazarsın?',options:['Shift + 1','AltGr + Q','Ctrl + 2','Alt + 2'],correct:1},
+  {prompt:'Hangisi Türkçe Q klavyede @ için doğru kombinasyondur?',options:['AltGr + Q','AltGr + Q','Ctrl + Q','Alt + Q'],correct:0},
+  {prompt:'Adres yazarken @ işaretinden sonra ne gelir?',options:['student.cakir.k12.tr','sevinc','nokta','boşluk'],correct:0}
+ ]
+},
+{
+ title:'6. Seviye — Doğru Öğrenciyi Bul 🧑‍🏫', kind:'person',
+ questions:[
+  {address:'ipek.sen'+DOMAIN,options:['Ece Yılmaz','Mert Kaya','İpek Şen'],correct:2},
+  {address:'mert.kaya'+DOMAIN,options:['Mert Kaya','Ada Çelik','Ali Demir'],correct:0},
+  {address:'zeynep.celik'+DOMAIN,options:['Zeynep Ela Çelik','İpek Şahin','Ece Yılmaz'],correct:0},
+  {address:'omer.kaya'+DOMAIN,options:['Ömer Faruk Kaya','Ali Can Demir','Mert Kaya'],correct:0}
+ ]
+},
+{
+ title:'7. Seviye — Hızlı Karar ⚡', kind:'judge',
+ questions:[
+  {address:'naz.sevinc'+DOMAIN,correct:true},
+  {address:'Naz.sevinc'+DOMAIN,correct:false},
+  {address:'naz.sevinç'+DOMAIN,correct:false},
+  {address:'naz sevinc'+DOMAIN,correct:false},
+  {address:'ali.demir'+DOMAIN,correct:true},
+  {address:'ali.demir@student.cakir.k12.com',correct:false}
+ ]
+},
+{
+ title:'8. Seviye — Eksik Parçayı Bul 🔧', kind:'missing',
+ questions:[
+  {prefix:'[ ? ]',suffix:DOMAIN,options:['İsim.soyisim: naz.sevinc','Sadece @'],correct:0,
+   good:'Doğru! Eksik bölüm isim.soyisim kısmı.',bad:'İpucu: @ zaten var. Eksik olan isim.soyisim kısmı.'},
+  {prefix:'ali.demir',suffix:'[ ? ]',options:['@student.cakir.k12.tr','Sadece nokta'],correct:0,
+   good:'Doğru! @ ve okul alan adı eksik.',bad:'İpucu: İsim.soyisimden sonra @student.cakir.k12.tr gelir.'},
+  {prefix:'sule.ozdemir',suffix:'@student.[ ? ]',options:['cakir.k12.tr','sule','ozdemir'],correct:0,
+   good:'Doğru! Okul alan adı cümlesini tamamladın.',bad:'İpucu: Alan adı @student.cakir.k12.tr şeklindedir.'}
+ ]
+},
+{
+ title:'9. Seviye — Karışık Hataları Düzelt 🛠️', kind:'fix',
+ questions:[
+  {bad:'Naz.çelik @student.cakir.k12.tr',correct:'naz.celik'+DOMAIN},
+  {bad:'omer.faruk.kaya@student.cakir.k12.tr',correct:'omer.kaya'+DOMAIN},
+  {bad:'Şule ozdemir@student.cakir.k12.com',correct:'sule.ozdemir'+DOMAIN},
+  {bad:'ece.yilmaz @student.cakir.k12.tr',correct:'ece.yilmaz'+DOMAIN}
+ ]
+},
+{
+ title:'10. Seviye — Hesap Adresi Ustası 🏆', kind:'input',
+ questions:[
+  {name:'Ada Su Çelik',correct:'ada.celik'+DOMAIN,tip:'Son kez bütün kuralları kontrol et.'},
+  {name:'Ece Yılmaz',correct:'ece.yilmaz'+DOMAIN,tip:'Küçük harf • nokta • @ • doğru alan adı.'},
+  {name:'Mert Kaya',correct:'mert.kaya'+DOMAIN,tip:'Boşluk bırakma ve Türkçe karakter kullanma.'},
+  {name:'Şule Özdemir',correct:'sule.ozdemir'+DOMAIN,tip:'ş → s, ö → o.'}
+ ]
+}
+];
+
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+}
+function startGame(){level=0;score=0;show('game');render()}
+function chooseQuestion(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function esc(x){return String(x).replaceAll('\\','\\\\').replaceAll("'","\\'")}
+function keyTip(){
+ return `<div class="keytip"><span class="key wide">AltGr</span><span class="plus">+</span><span class="key">Q</span><span>→ @</span></div>`;
+}
+function feedback(ok,msg){
+ const f=document.getElementById('feedback');
+ f.className='feedback show '+(ok?'success':'error');
+ f.textContent=(ok?'🎉 Harika! ':'💡 Bir kez daha düşün! ')+msg;
+}
+function choose(btn,ok,good,bad){
+ if(answered)return;
+ answered=true;
+ document.querySelectorAll('.option').forEach(b=>b.disabled=true);
+ btn.classList.add(ok?'correct':'wrong');
+ feedback(ok,ok?good:bad);
+ if(ok)score+=10;
+ document.getElementById('next').style.display='block';
+}
+function checkInput(correct,tip){
+ if(answered)return;
+ const input=document.getElementById('answerInput');
+ const value=input.value.trim();
+ if(value===correct){
+   answered=true;score+=15;
+   input.style.borderColor='#49b96e';
+   feedback(true,'Adresini doğru yazdın!');
+   document.getElementById('next').style.display='block';
+   return;
+ }
+ let msg='';
+ if(/[A-ZÇĞİÖŞÜ]/.test(value))msg='Büyük harf veya Türkçe karakter kullandın.';
+ else if(/\s/.test(value))msg='Boşluk var. İsim ile soyisim arasına nokta kullan.';
+ else if(!value.includes('.'))msg='İsim ile soyisim arasındaki noktayı kontrol et.';
+ else if(!value.includes('@'))msg='@ işaretini unutma: AltGr + Q.';
+ else if(!value.endsWith(DOMAIN))msg='Adresin sonunu kontrol et: @student.cakir.k12.tr';
+ else msg=tip||'Adresin isim ve soyisim kısmını tekrar kontrol et.';
+ feedback(false,msg);
+}
+function render(){
+ answered=false;
+ const L=levels[level];
+ const q=chooseQuestion(L.questions);
+ document.getElementById('progress').innerHTML=levels.map((_,i)=>`<div class="dot ${i<=level?'on':''}"></div>`).join('');
+ let h=`<div class="question"><div class="level-tag">${level+1} / 10</div><h2>${L.title}</h2>`;
+
+ if(L.kind==='mc'){
+   h+=`<p><b>${q.q}</b> için doğru hesap adresini seç.</p>`;
+   h+=`<div class="options">${q.options.map((x,i)=>`<button class="option" onclick="choose(this,${i===q.correct},'${esc(q.good)}','${esc(q.bad)}')">${String.fromCharCode(65+i)}) ${x}</button>`).join('')}</div>`;
+ }
+ if(L.kind==='error'){
+   h+=`<p>Bu adreste ne yanlış?</p><div class="email">${q.address}</div>`;
+   h+=`<div class="options">${q.options.map((x,i)=>`<button class="option" onclick="choose(this,${i===q.correct},'${esc(q.good)}','${esc(q.bad)}')">${String.fromCharCode(65+i)}) ${x}</button>`).join('')}</div>`;
+ }
+ if(L.kind==='parts'){
+   h+=`<p>${q.prompt}</p><div class="email">${q.address}</div>`;
+   h+=`<div class="options">${q.options.map((x,i)=>`<button class="option" onclick="choose(this,${i===q.correct},'${esc(q.good)}','${esc(q.bad)}')">${String.fromCharCode(65+i)}) ${x}</button>`).join('')}</div>`;
+ }
+ if(L.kind==='input'){
+   h+=`<p><b>${q.name}</b> öğrencisinin hesap adresini yaz.</p>${keyTip()}
+   <input id="answerInput" class="field" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="hesap adresini buraya yaz">
+   <div class="hint">Küçük harf • Türkçe karakter yok • ilk isim.soyisim • boşluk yok • @ = AltGr + Q</div>
+   <button class="primary" style="margin-top:14px" onclick="checkInput('${esc(q.correct)}','${esc(q.tip)}')">Kontrol Et ✓</button>`;
+ }
+ if(L.kind==='at'){
+   h+=`<p>${q.prompt}</p>${keyTip()}<div class="options">${q.options.map((x,i)=>`<button class="option" onclick="choose(this,${i===q.correct},'${i===q.correct?'Türkçe Q klavyede @ için AltGr + Q kullanılır.':'@ için AltGr ve Q tuşlarına birlikte bas.'}','@ işaretinin tuşlarını tekrar kontrol et.')">${String.fromCharCode(65+i)}) ${x}</button>`).join('')}</div>`;
+ }
+ if(L.kind==='person'){
+   h+=`<p>Bu hesap hangi öğrenciye ait?</p><div class="email">${q.address}</div>`;
+   h+=`<div class="options">${q.options.map((x,i)=>`<button class="option" onclick="choose(this,${i===q.correct},'${i===q.correct?'Doğru! Hesap adresindeki isim ve soyisim eşleşiyor.':'Adresin isim ve soyisim kısmını tekrar incele.'}','Adresin isim ve soyisim kısmını tekrar kontrol et.')">${String.fromCharCode(65+i)}) ${x}</button>`).join('')}</div>`;
+ }
+ if(L.kind==='judge'){
+   h+=`<p>Bu hesap adresi <b>doğru mu?</b></p><div class="email">${q.address}</div><div class="options">
+   <button class="option" onclick="choose(this,${q.correct},'Bu adres kurallara uygun.','Bu adres kurallara uygun değil.')">A) ✅ DOĞRU</button>
+   <button class="option" onclick="choose(this,${!q.correct},'Bu adres kurallara uygun değil.','Bu adres doğru görünüyor.')">B) ❌ HATALI</button></div>`;
+ }
+ if(L.kind==='missing'){
+   h+=`<p>Bu adreste <b>hangi bölüm eksik?</b></p><div class="email">${q.prefix}${q.suffix}</div>`;
+   h+=`<div class="options">${q.options.map((x,i)=>`<button class="option" onclick="choose(this,${i===q.correct},'${esc(q.good)}','${esc(q.bad)}')">${String.fromCharCode(65+i)}) ${x}</button>`).join('')}</div>`;
+ }
+ if(L.kind==='fix'){
+   h+=`<p>Hatalı adresi düzelt.</p><div class="email">${q.bad}</div>${keyTip()}
+   <input id="answerInput" class="field" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="doğru adresi buraya yaz">
+   <div class="hint">İpucu: @ için AltGr + Q • Türkçe karakter yok • boşluk yok</div>
+   <button class="primary" style="margin-top:14px" onclick="checkInput('${esc(q.correct)}','Hataları tek tek kontrol et.')">Kontrol Et ✓</button>`;
+ }
+ h+=`<div id="feedback" class="feedback"></div><div class="action-area"><button id="next" class="primary next" onclick="nextLevel()">Devam Et ➜</button></div></div>`;
+ document.getElementById('content').innerHTML=h;
+ const input=document.getElementById('answerInput');
+ if(input)input.focus();
+}
+function nextLevel(){
+ if(level<levels.length-1){level++;render()}
+ else{
+   show('finish');
+   document.getElementById('finalText').innerHTML=`Toplam puanın: <span class="score">${score}</span><br><br>🎉 10 seviyeyi tamamladın! Hesap adresini yazma konusunda artık çok daha hazırsın.`;
+ }
+}
+</script>
 </body>
 </html>
