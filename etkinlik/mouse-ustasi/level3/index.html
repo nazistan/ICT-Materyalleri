@@ -1,0 +1,85 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Mouse Ustası - 3. Seviye</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Arial,Helvetica,sans-serif;background:#70c5ed}
+#game{position:relative;width:100vw;height:100vh;overflow:hidden;background:url("assets/scene.png") center/cover no-repeat}
+#top{position:absolute;top:12px;left:14px;right:14px;height:100px;z-index:50;display:grid;grid-template-columns:150px minmax(430px,520px) 150px;justify-content:space-between;align-items:start}
+.stat{min-height:60px;padding:9px 15px;border-radius:22px;background:#fff9ed;border:4px solid #b8732a;box-shadow:0 6px 15px #0003;color:#57361f;font-size:27px;font-weight:900;text-align:center;white-space:nowrap}
+#targetBox{height:92px;display:flex;align-items:center;justify-content:center;gap:14px;border-radius:24px;background:#fff9ed;border:5px solid #b8732a;box-shadow:0 8px 18px #0004}
+#targetIcon{font-size:48px;line-height:1}
+#targetText{font-size:clamp(28px,2.5vw,40px);font-weight:900;color:#57361f;white-space:nowrap}
+#progress{position:absolute;z-index:52;top:104px;left:50%;transform:translateX(-50%);width:230px;height:8px;background:#dce6da;border-radius:20px;overflow:hidden}
+#bar{height:100%;width:100%;background:#5bc743}
+#instruction{position:absolute;z-index:52;top:119px;left:50%;transform:translateX(-50%);padding:8px 20px;border-radius:18px;background:rgba(255,255,255,.94);color:#56351f;font-size:20px;font-weight:800;box-shadow:0 4px 12px #0002;white-space:nowrap}
+#arena{position:absolute;inset:0;z-index:10}
+.hit{position:absolute;border:0;padding:0;background:transparent;cursor:pointer;outline:none;touch-action:manipulation}
+.hit.target{animation:targetGlow .55s ease-in-out infinite alternate;z-index:16}
+.hit.target::after{content:"";position:absolute;left:-7%;top:-7%;width:114%;height:114%;border-radius:50%;border:5px solid rgba(238,112,255,.95);box-shadow:0 0 8px rgba(255,120,244,.95),0 0 18px rgba(198,92,255,.9),0 0 32px rgba(167,76,255,.65),inset 0 0 12px rgba(255,170,255,.55);animation:ringPulse .55s ease-in-out infinite alternate;pointer-events:none}
+@keyframes targetGlow{from{filter:drop-shadow(0 0 7px rgba(255,105,240,.55))}to{filter:drop-shadow(0 0 20px rgba(186,76,255,.95))}}
+@keyframes ringPulse{from{transform:scale(.94);opacity:.72}to{transform:scale(1.08);opacity:1}}
+.hit.wrong{animation:shake .3s ease}@keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.hit.correct{animation:correct .55s ease}@keyframes correct{30%{transform:scale(1.1)}65%{transform:scale(.94)}}
+#fx{position:absolute;inset:0;z-index:60;pointer-events:none}.particle{position:absolute;font-size:28px;animation:particle .8s ease-out forwards}
+@keyframes particle{to{transform:translate(var(--dx),var(--dy)) scale(1.2) rotate(25deg);opacity:0}}
+#toast{position:absolute;z-index:70;bottom:26px;left:50%;transform:translateX(-50%) scale(.92);padding:10px 22px;border:4px solid #b8732a;border-radius:20px;background:#fff9ed;color:#57361f;font-size:22px;font-weight:900;opacity:0;pointer-events:none;transition:.18s}
+#toast.show{opacity:1;transform:translateX(-50%) scale(1)}
+.ctrl{position:absolute;z-index:80;bottom:18px;width:62px;height:62px;border-radius:50%;border:4px solid #9d6327;background:#168fd4;color:white;font-size:29px;font-weight:900;box-shadow:0 5px 0 #0d6598;cursor:pointer}
+#pause{left:18px}#home{right:18px}
+#finish{display:none;position:absolute;inset:0;z-index:100;align-items:center;justify-content:center;background:#19482d66}
+.card{width:min(500px,80vw);padding:32px;border-radius:28px;background:#fff9ed;border:6px solid #b8732a;box-shadow:0 18px 40px #0005;text-align:center}
+.card h2{margin:0 0 10px;color:#57361f;font-size:42px}.card p{margin:0 0 22px;color:#68472f;font-size:25px;font-weight:800}
+#again{border:0;border-radius:17px;padding:13px 28px;background:#63c93f;color:white;font-size:22px;font-weight:900;box-shadow:0 5px 0 #398b22;cursor:pointer}
+@media(max-width:900px){#top{grid-template-columns:110px minmax(330px,1fr) 110px;gap:7px}.stat{font-size:22px;padding:8px 10px}#targetBox{height:82px}#targetText{font-size:27px}#targetIcon{font-size:40px}#instruction{font-size:17px}}
+</style></head><body>
+<div id="game">
+<div id="top"><div id="score" class="stat">⭐ <span id="points">0</span></div>
+<div id="targetBox"><div id="targetIcon">🐰</div><div id="targetText">Tavşanı Bul!</div></div>
+<div id="timer" class="stat">01:00</div></div>
+<div id="progress"><div id="bar"></div></div>
+<div id="instruction">Görseli bul ve mouse ile tıkla!</div>
+<div id="arena"><button class="hit dog" aria-label="Köpek"></button><button class="hit rabbit" aria-label="Tavşan"></button><button class="hit cat" aria-label="Kedi"></button></div>
+<div id="fx"></div><div id="toast"></div>
+<button id="pause" class="ctrl" aria-label="Duraklat">Ⅱ</button><button id="home" class="ctrl" aria-label="Ana menü">⌂</button>
+<div id="finish"><div class="card"><h2>Harika! 🎉</h2><p id="result"></p><button id="again">Tekrar Oyna</button></div></div>
+</div>
+<script>
+const A={dog:{el:document.querySelector('.dog'),left:10,top:50,w:20,h:35,label:'Köpeği Bul!',icon:'🐶'},rabbit:{el:document.querySelector('.rabbit'),left:43,top:48,w:20,h:38,label:'Tavşanı Bul!',icon:'🐰'},cat:{el:document.querySelector('.cat'),left:77,top:54,w:20,h:34,label:'Kediyi Bul!',icon:'🐱'}};
+const points=document.getElementById('points'),timer=document.getElementById('timer'),bar=document.getElementById('bar'),targetText=document.getElementById('targetText'),targetIcon=document.getElementById('targetIcon'),toast=document.getElementById('toast'),fx=document.getElementById('fx'),finish=document.getElementById('finish'),result=document.getElementById('result');
+let target='rabbit',score=0,running=false,paused=false,start=0,pausedAt=0;
+function layout(){Object.values(A).forEach(a=>{a.el.style.left=a.left+'vw';a.el.style.top=a.top+'vh';a.el.style.width=a.w+'vw';a.el.style.height=a.h+'vh'})}
+let previousTarget='';
+let consecutiveTargetCount=0;
+function setTarget(){
+  const keys=Object.keys(A);
+  let choices=keys.filter(k=>k!==previousTarget);
+  if(consecutiveTargetCount<2 && Math.random()<0.55) choices=keys;
+  let next=choices[Math.floor(Math.random()*choices.length)];
+  if(next===previousTarget) consecutiveTargetCount++;
+  else consecutiveTargetCount=1;
+  previousTarget=next;
+  target=next;
+  targetText.textContent=A[target].label;
+  targetIcon.textContent=A[target].icon;
+  Object.values(A).forEach(a=>a.el.classList.remove('target'));
+  A[target].el.classList.add('target');
+}
+function message(s){toast.textContent=s;toast.classList.add('show');clearTimeout(message.t);message.t=setTimeout(()=>toast.classList.remove('show'),650)}
+function burst(el){let r=el.getBoundingClientRect();for(let i=0;i<16;i++){let p=document.createElement('span');p.className='particle';p.textContent=['✨','⭐','💛','🐾'][i%4];p.style.left=(r.left+r.width/2)+'px';p.style.top=(r.top+r.height/2)+'px';p.style.setProperty('--dx',((Math.random()-.5)*150)+'px');p.style.setProperty('--dy',(-35-Math.random()*110)+'px');fx.appendChild(p);setTimeout(()=>p.remove(),850)}}
+function getStageSpeed(){
+  const elapsed=(performance.now()-start)/1000;
+  if(elapsed<15) return 900;
+  if(elapsed<30) return 650;
+  if(elapsed<45) return 420;
+  return 220;
+}
+function choose(k){if(!running||paused)return;let a=A[k];if(k!==target){a.el.classList.remove('wrong');void a.el.offsetWidth;a.el.classList.add('wrong');message('👀 Hedef hayvana bak!');return}score++;points.textContent=score;burst(a.el);a.el.classList.remove('correct');void a.el.offsetWidth;a.el.classList.add('correct');message('✨ Harika!');setTimeout(()=>{if(running&&!paused)setTarget()},getStageSpeed())}
+Object.entries(A).forEach(([k,a])=>a.el.addEventListener('click',()=>choose(k)));
+document.getElementById('pause').onclick=()=>{if(!running)return;paused=!paused;if(paused){pausedAt=performance.now();document.getElementById('pause').textContent='▶';message('⏸ Duraklatıldı')}else{start+=performance.now()-pausedAt;document.getElementById('pause').textContent='Ⅱ';requestAnimationFrame(loop)}};
+document.getElementById('home').onclick=()=>window.parent.postMessage({type:'goHome'},'*');
+document.getElementById('again').onclick=startGame;
+function startGame(){score=0;previousTarget='';consecutiveTargetCount=0;points.textContent='0';running=true;paused=false;finish.style.display='none';document.getElementById('pause').textContent='Ⅱ';start=performance.now();setTarget();requestAnimationFrame(loop)}
+function loop(now){if(!running||paused)return;let elapsed=(now-start)/1000,remain=Math.max(0,60-elapsed);timer.textContent='00:'+String(Math.ceil(remain)).padStart(2,'0');bar.style.width=(remain/60*100)+'%';if(remain<=0){running=false;result.textContent='60 saniyede '+score+' hayvan buldun!';finish.style.display='flex';window.parent.postMessage({type:'levelComplete',level:3,score:score},'*');return}requestAnimationFrame(loop)}
+layout();addEventListener('resize',layout);startGame();
+</script></body></html>
