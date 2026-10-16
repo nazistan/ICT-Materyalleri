@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Klavye Galaksisi — Tuş Görevi</title>
+<style>
+:root{--ink:#f4f7ff;--muted:#aab9df;--cyan:#42e8f5;--pink:#ff63b8;--gold:#ffd76a;--panel:#111b3d;--line:#334a80}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family: "Trebuchet MS",Arial,sans-serif;background:#070b1e;color:var(--ink)}
+button{font:inherit;cursor:pointer}
+.app{height:100dvh;min-height:500px;display:flex;align-items:center;justify-content:center;padding:12px;background:
+radial-gradient(ellipse at 20% 20%,#243c7b 0,transparent 36%),
+radial-gradient(ellipse at 82% 75%,#34205e 0,transparent 35%),#070b1e;position:relative;isolation:isolate}
+.stars,.stars:before,.stars:after{position:absolute;inset:0;content:"";pointer-events:none;background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#72eaff 1px,transparent 1.5px);background-size:73px 79px,113px 107px;background-position:0 0,28px 43px;opacity:.35;z-index:-1}
+.stars:before{transform:translate(17px,22px);opacity:.35}.stars:after{background-size:191px 157px;opacity:.25}
+.game{width:min(1250px,100%);height:min(760px,calc(100dvh - 24px));min-height:480px;display:grid;grid-template-rows:auto auto 1fr auto;gap:12px;position:relative}
+.top{display:flex;align-items:center;gap:12px;min-width:0}
+.brand{display:flex;align-items:center;gap:12px;min-width:260px}
+.logo{width:55px;height:55px;border-radius:18px;background:linear-gradient(145deg,#4ce6f4,#4779ff);display:grid;place-items:center;color:#08132e;font-size:30px;box-shadow:0 0 25px #39dff755}
+.brand h1{font-size:clamp(18px,2.2vw,28px);line-height:1;margin:0;letter-spacing:.04em}.brand p{margin:5px 0 0;color:var(--cyan);font-size:11px;letter-spacing:.2em;font-weight:800}
+.stats{margin-left:auto;display:flex;gap:10px;align-items:center}
+.stat{border:1px solid #344b7f;background:#111a38dd;border-radius:15px;padding:10px 15px;min-width:108px;text-align:center;box-shadow:inset 0 1px #ffffff12}
+.stat small{display:block;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.14em}.stat strong{font-size:21px}
+.iconbtn{width:42px;height:42px;border-radius:14px;background:#15264e;border:1px solid #4668a6;color:#eafaff;font-size:19px}
+.progress{height:7px;background:#1a2850;border-radius:10px;overflow:hidden;border:1px solid #344b7f}.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),#8a82ff,var(--pink));transition:width .35s}
+.board{display:grid;grid-template-columns:minmax(0,1fr) 235px;gap:14px;min-height:0}
+.mission{background:linear-gradient(145deg,#151f43f2,#0e1733f2);border:1px solid #344b7f;border-radius:24px;padding:clamp(16px,2.5vw,30px);display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.mission:after{content:"";position:absolute;width:280px;height:280px;border:1px solid #3c6a9b55;border-radius:50%;right:-110px;top:-120px;box-shadow:0 0 0 30px #3c6a9b13,0 0 0 60px #3c6a9b0b;pointer-events:none}
+.tag{align-self:flex-start;padding:7px 11px;border-radius:8px;background:#203568;color:var(--cyan);font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.mission h2{font-size:clamp(23px,3vw,38px);line-height:1.15;margin:18px 0 12px;max-width:720px}
+.desc{font-size:clamp(14px,1.6vw,18px);color:#c2cde8;line-height:1.45;margin:0 0 18px;max-width:700px}
+.example{background:#08132c;border:1px solid #344b7f;border-radius:16px;padding:18px 20px;max-width:700px;position:relative;z-index:1}
+.example .label{font-size:10px;letter-spacing:.16em;color:#91a9d6;font-weight:900;margin-bottom:9px}
+.example .sentence{font-size:clamp(20px,2.7vw,32px);font-weight:900;letter-spacing:.02em;overflow-wrap:anywhere}
+.cursor{display:inline-block;width:3px;height:1.05em;vertical-align:-.15em;background:var(--cyan);margin:0 2px;box-shadow:0 0 10px var(--cyan)}
+.hint{margin-top:15px;padding:12px 14px;background:#18284d;border-left:3px solid var(--gold);border-radius:8px;color:#dbe5ff;font-size:14px;line-height:1.35;max-width:700px}
+.side{display:flex;flex-direction:column;gap:12px;min-height:0}
+.orb{flex:1;min-height:140px;border-radius:22px;border:1px solid #344b7f;background:radial-gradient(circle at 50% 35%,#294b88,#111a39 70%);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:18px;position:relative;overflow:hidden}
+.planet{width:86px;height:86px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#a6ffff,#38a9de 35%,#3451bc 68%,#17245a);box-shadow:inset -12px -10px 18px #091336,0 0 30px #41e5f655;position:relative;margin-bottom:13px}
+.planet:after{content:"";position:absolute;left:-17px;top:31px;width:120px;height:23px;border:5px solid #ff8fd0;border-radius:50%;transform:rotate(-22deg);box-shadow:0 0 12px #ff63b855}
+.orb strong{font-size:15px}.orb span{font-size:12px;color:var(--muted);margin-top:5px}
+.sidecard{background:#111a38;border:1px solid #344b7f;border-radius:18px;padding:15px}
+.sidecard h3{margin:0 0 9px;font-size:12px;color:var(--cyan);letter-spacing:.12em}
+.sidecard p{margin:0;font-size:13px;color:#d0d9ef;line-height:1.45}
+.keyboard{background:#0d1530;border:1px solid #344b7f;border-radius:20px;padding:13px;box-shadow:0 10px 0 #050918}
+.keyrow{display:grid;grid-template-columns:1fr 1.65fr 1.35fr 1fr 1.35fr;gap:10px}
+.key{min-width:0;min-height:74px;border-radius:13px;border:1px solid #5b6c9d;border-bottom-width:5px;background:linear-gradient(160deg,#26365f,#111a38);color:#edf4ff;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .12s,border-color .12s,background .12s;box-shadow:inset 0 1px #ffffff19}
+.key .symbol{font-size:22px;color:var(--cyan);line-height:1}.key .name{font-size:clamp(10px,1.2vw,14px);letter-spacing:.03em}
+.key:hover,.key:focus-visible{outline:none;border-color:var(--cyan);box-shadow:0 0 0 2px #42e8f544,inset 0 1px #ffffff19}
+.key:active{transform:translateY(3px);border-bottom-width:2px}
+.key.correct{border-color:#62f2b1;background:linear-gradient(160deg,#236e69,#142b43);box-shadow:0 0 20px #62f2b155}
+.key.wrong{animation:shake .25s;border-color:#ff6e9d}
+.footer{display:flex;align-items:center;gap:12px;min-height:48px}
+.feedback{flex:1;min-width:0;padding:11px 14px;border-radius:13px;background:#111a38;border:1px solid #344b7f;color:#c7d4f2;font-size:14px}
+.feedback.good{border-color:#62f2b1;color:#baffdf}.feedback.bad{border-color:#ff6e9d;color:#ffc2d7}
+.next{border:0;border-radius:13px;padding:13px 22px;background:linear-gradient(180deg,#ffe58a,#ffad36);color:#281a31;font-weight:1000;box-shadow:0 4px 0 #a95724;white-space:nowrap}
+.next:disabled{opacity:.35;filter:grayscale(.7);cursor:not-allowed}
+.overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:18px;background:#060b1ddd;backdrop-filter:blur(8px);border-radius:24px}
+.modal{width:min(540px,100%);padding:clamp(24px,4vw,42px);border-radius:24px;border:1px solid #4a6499;background:linear-gradient(145deg,#182852,#0d1530);box-shadow:0 25px 80px #0008;text-align:center}
+.modal .emblem{font-size:48px}.modal h2{font-size:clamp(26px,4vw,40px);margin:10px 0}.modal p{color:#c2cde8;line-height:1.55;margin:0 0 22px}
+.primary{border:0;border-radius:13px;padding:14px 22px;background:linear-gradient(180deg,#72f2f0,#39b9e9);color:#08132e;font-size:16px;font-weight:1000;box-shadow:0 4px 0 #2479a7}
+.hidden{display:none!important}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media(max-width:760px){
+ .app{padding:8px}.game{height:calc(100dvh - 16px);gap:8px;grid-template-rows:auto 6px 1fr auto}.top{flex-wrap:wrap}.brand{min-width:0;flex:1}.logo{width:42px;height:42px;font-size:23px}.brand h1{font-size:18px}.brand p{font-size:9px}.stats{gap:5px}.stat{padding:6px 8px;min-width:68px}.stat strong{font-size:16px}.iconbtn{width:34px;height:34px}.board{grid-template-columns:1fr;grid-template-rows:1fr auto;gap:8px}.mission{padding:15px;border-radius:17px}.mission h2{margin:10px 0;font-size:clamp(20px,5vw,29px)}.desc{margin-bottom:10px}.example{padding:12px}.hint{margin-top:9px;padding:9px;font-size:12px}.side{display:grid;grid-template-columns:100px 1fr;gap:8px}.orb{min-height:86px;padding:8px}.planet{width:40px;height:40px;margin-bottom:6px}.planet:after{width:58px;height:12px;left:-10px;top:14px;border-width:3px}.orb strong{font-size:11px}.orb span{display:none}.sidecard{padding:10px}.sidecard h3{font-size:10px;margin-bottom:4px}.sidecard p{font-size:11px}.keyboard{padding:7px;border-radius:14px}.keyrow{gap:5px}.key{min-height:58px;border-radius:9px}.key .symbol{font-size:17px}.key .name{font-size:9px}.footer{gap:6px}.feedback{font-size:11px;padding:9px}.next{padding:11px 12px;font-size:12px}
+}
+@media(max-height:620px) and (min-width:761px){.game{gap:7px}.key{min-height:58px}.mission{padding:16px}.mission h2{margin:9px 0}.orb{min-height:110px}.planet{width:58px;height:58px}}
+
+/* Başarı anı: küçük yaş grubu için görünür, kısa ve neşeli geri bildirim */
+#celebration{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden;border-radius:24px}
+#celebration.hidden{display:none!important}
+.confetti{position:absolute;left:var(--x);top:var(--y);width:10px;height:16px;border-radius:3px;background:var(--c);animation:confettiFly 950ms cubic-bezier(.12,.7,.2,1) forwards;transform:rotate(var(--r))}
+@keyframes confettiFly{0%{opacity:1;transform:translate(0,0) rotate(0) scale(.7)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(560deg) scale(1.1)}}
+#successBanner{position:absolute;left:50%;top:42%;z-index:9;transform:translate(-50%,-50%) scale(.55);opacity:0;pointer-events:none;background:linear-gradient(135deg,#fff6b2,#ffcf4f);color:#20264d;border:3px solid white;border-radius:24px;padding:18px 28px;font-size:clamp(24px,4vw,46px);font-weight:1000;text-align:center;box-shadow:0 0 0 6px #ffd85c66,0 12px 35px #0007;white-space:nowrap}
+#successBanner.show{animation:bannerPop 1250ms cubic-bezier(.2,1.4,.4,1) both}
+@keyframes bannerPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.45) rotate(-5deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(2deg)}28%,78%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:0;transform:translate(-50%,-58%) scale(.88)}}
+.key.correct{animation:correctKey .7s ease-in-out 2!important;border-color:#72ffb7!important;background:linear-gradient(160deg,#3ddc9a,#126a67)!important;box-shadow:0 0 0 4px #72ffb744,0 0 35px #72ffb7!important}
+@keyframes correctKey{0%,100%{transform:scale(1)}45%{transform:scale(1.08)}}
+.score-pop{position:absolute;right:12%;top:10%;font-size:clamp(22px,3vw,34px);font-weight:1000;color:#fff17b;text-shadow:0 3px 0 #9c571d,0 0 18px #fff;z-index:10;pointer-events:none;animation:scoreRise 900ms ease-out forwards}
+@keyframes scoreRise{0%{opacity:0;transform:translateY(15px) scale(.7)}20%{opacity:1;transform:translateY(0) scale(1.2)}100%{opacity:0;transform:translateY(-65px) scale(1)}}
+@media(prefers-reduced-motion:reduce){.confetti,#successBanner.show,.key.correct,.score-pop{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+</style>
+</head>
+<body>
+<div class="app"><div class="stars"></div>
+<main class="game" aria-label="Klavye Galaksisi oyunu">
+ <header class="top">
+  <div class="brand"><div class="logo">⌘</div><div><h1>KLAVYE GALAKSİSİ</h1><p>UZAY GÖREVİ • TUŞ EĞİTİMİ</p></div></div>
+  <div class="stats"><div class="stat"><small>GÖREV</small><strong id="taskCount">1 / 15</strong></div><div class="stat"><small>PUAN</small><strong id="score">0 ✦</strong></div><button class="iconbtn" id="soundBtn" aria-label="Ses aç kapa">♫</button><button class="iconbtn" id="fullBtn" aria-label="Tam ekran">⛶</button></div>
+ </header>
+ <div class="progress"><span id="progressBar"></span></div>
+ <section class="board">
+  <article class="mission">
+   <span class="tag" id="missionTag">UZAY GÖREVİ 01</span>
+   <h2 id="question">İki kelimenin arasına boşluk bırakmak için hangi tuşu kullanırsın?</h2>
+   <p class="desc" id="description">Doğru tuşu seç ve uzay aracının iletişim sistemini çalıştır.</p>
+   <div class="example"><div class="label" id="exampleLabel">İLETİŞİM MESAJI</div><div class="sentence" id="sentence">Merhaba<span class="cursor"></span>arkadaşlar</div></div>
+   <div class="hint" id="hint">İpucu: Kelimeleri birbirinden ayırmak için boşluk gerekir.</div>
+  </article>
+  <aside class="side">
+   <div class="orb"><div class="planet"></div><strong id="buddyTitle">Kaptan Nova</strong><span id="buddyText">Görev sistemleri hazır</span></div>
+   <div class="sidecard"><h3>GÖREV KONTROLÜ</h3><p id="sideInstruction">Aşağıdaki beş tuştan doğru olanı seç. İstersen gerçek klavyeni de kullanabilirsin.</p></div>
+  </aside>
+ </section>
+ <section class="keyboard" aria-label="Tıklanabilir tuşlar"><div class="keyrow">
+  <button class="key" data-key="SHIFT"><span class="symbol">⇧</span><span class="name">SHIFT</span></button>
+  <button class="key" data-key="SPACE"><span class="symbol">⎵</span><span class="name">SPACE</span></button>
+  <button class="key" data-key="BACKSPACE"><span class="symbol">⌫</span><span class="name">BACKSPACE</span></button>
+  <button class="key" data-key="ENTER"><span class="symbol">↵</span><span class="name">ENTER</span></button>
+  <button class="key" data-key="CAPS LOCK"><span class="symbol">⇪</span><span class="name">CAPS LOCK</span></button>
+ </div></section>
+ <footer class="footer"><div class="feedback" id="feedback" aria-live="polite">Bir tuşa tıklayarak görevi çözebilirsin.</div><button class="next" id="nextBtn" disabled>Sonraki Görev →</button></footer>
+ <div id="celebration" class="hidden" aria-hidden="true"></div><div id="successBanner" aria-live="polite">⭐ HARİKA! ⭐</div>
+ <div class="overlay" id="startOverlay"><div class="modal"><div class="emblem">🚀</div><span class="tag">GÖREV BRİFİNGİ</span><h2>Klavye Galaksisi</h2><p>İletişim istasyonunda 15 görev seni bekliyor! Beş özel tuşu keşfet, doğru cevaplarla yıldız topla.</p><p><b>Nasıl oynanır?</b><br>Bir tuşa ekrandan tıkla veya gerçek klavyende bas. Her doğru cevap 10 puan kazandırır.</p><button class="primary" id="startBtn">Göreve Başla 🚀</button></div></div>
+ <div class="overlay hidden" id="endOverlay"><div class="modal"><div class="emblem">🌌</div><span class="tag">GÖREV TAMAMLANDI</span><h2>Harika iş, uzay kaşifi!</h2><p id="finalText">15 görevi tamamladın.</p><button class="primary" id="restartBtn">Yeniden Oyna ↻</button></div></div>
+</main></div>
+<script>
+const tasks=[
+ {key:"SPACE",q:"İki kelimenin arasına boşluk bırakmak için hangi tuşu kullanırsın?",d:"Mesajdaki iki kelime birbirine yapışmış. Aralarına boşluk ekle.",s:"Merhaba|arkadaşlar",h:"İpucu: Uzun ve geniş tuş, kelimeler arasında boşluk bırakır."},
+ {key:"ENTER",q:"Yeni bir satıra geçmek için hangi tuşa basarsın?",d:"Mesajını bir alt satırdan sürdürmek istiyorsun.",s:"Merhaba arkadaşlar|Bugün nasılsınız?",h:"İpucu: Bu tuş, yazarken yeni satıra geçmeni sağlar."},
+ {key:"BACKSPACE",q:"İmlecin solundaki yanlış harfi silmek için hangi tuşu kullanırsın?",d:"Mesajında fazladan bir harf var. Onu silmelisin.",s:"Merhabaa| arkadaşlar",h:"İpucu: Geriye doğru silen tuşu bul."},
+ {key:"SHIFT",q:"Bir harfi yalnızca bir kez büyük yazmak için hangi tuşu kullanırsın?",d:"Bir ismin ilk harfini büyük yazman gerekiyor.",s:"|naz → Naz",h:"İpucu: Harf tuşuyla birlikte basıldığında büyük harf yazdırabilir."},
+ {key:"CAPS LOCK",q:"Bir cümleyi tamamen büyük harflerle yazmak istiyorsun. Hangi tuşu açarsın?",d:"Tüm mesajın büyük harflerle yazılması gerekiyor.",s:"MERHABA DÜNYA",h:"İpucu: Bu tuş büyük harf modunu açıp kapatır."},
+ {key:"SPACE",q:"“UZAYARACI” kelimesini iki kelimeye ayırmak için hangi tuş gerekir?",d:"Doğru yazım: UZAY ARACI",s:"UZAY|ARACI",h:"İpucu: Kelimelerin arasında görünmeyen bir boşluk oluşturur."},
+ {key:"ENTER",q:"Bir listeye yeni madde eklerken alt satıra geçmek için neye basarsın?",d:"Bir sonraki madde yeni satırda başlamalı.",s:"1. Kaskım hazır.|2. Roketim hazır.",h:"İpucu: Yeni satır için kullanılan tuşu hatırla."},
+ {key:"BACKSPACE",q:"“ROKKEET” yazdın. İmlecin sonundaki fazladan harfi silmek için hangi tuş?",d:"Fazla harfi kaldırıp kelimeyi düzelt.",s:"ROKKEE|T",h:"İpucu: İmlecin solundaki karakteri siler."},
+ {key:"SHIFT",q:"Cümleye başlarken ilk harfi büyük yapmak için hangi tuş yardımcı olur?",d:"Cümle başlangıcında büyük harf kullanılır.",s:"|uzay çok güzel. → Uzay çok güzel.",h:"İpucu: Harf tuşuna basarken bu tuşu basılı tut."},
+ {key:"CAPS LOCK",q:"Ekranda alarm kodunu tamamen büyük harfle yazman gerekiyor. Hangi tuş?",d:"Kodu büyük harf modunda yaz.",s:"KOD: NOVA-7",h:"İpucu: Büyük harf modunu açık tutar."},
+ {key:"SPACE",q:"“BENROBOTUM” ifadesini okunaklı yapmak için hangi tuşu kullanırsın?",d:"Doğru ifade: BEN ROBOTUM",s:"BEN|ROBOTUM",h:"İpucu: İki kelime arasında boşluk oluştur."},
+ {key:"ENTER",q:"Uzun bir mesajı iki satıra bölmek istiyorsun. Hangi tuş?",d:"İkinci cümle alt satırdan başlamalı.",s:"Roket kalkıyor.|Herkes hazır olsun!",h:"İpucu: Satır sonlarında kullanılan tuş."},
+ {key:"BACKSPACE",q:"Yanlış yazdığın son karakteri silmek için hangi tuş?",d:"İmlecin solundaki karakteri sil.",s:"NOVA5| → NOVA",h:"İpucu: Geri silme işlevi görür."},
+ {key:"SHIFT",q:"Klavyedeki bir sembolü veya büyük harfi tek seferlik yazarken hangi tuşu kullanabilirsin?",d:"Bir tuşla birlikte basıldığında geçici olarak farklı karakter yazdırabilir.",s:"Büyük harf: N",h:"İpucu: Genellikle harf tuşuyla beraber kullanılır."},
+ {key:"CAPS LOCK",q:"Son görev: Bilgisayarına başlığı tamamen büyük harfle yazdıracak tuş hangisi?",d:"Tüm başlığı büyük harflerle yaz.",s:"UZAY GÖREVİ TAMAMLANDI",h:"İpucu: Büyük harf modunu açan tuşu seç."}
+];
+let index=0,score=0,locked=true,soundOn=false;
+const $=id=>document.getElementById(id);
+function render(){
+ const t=tasks[index];locked=false;
+ $("taskCount").textContent=`${index+1} / ${tasks.length}`;
+ $("score").textContent=`${score} ✦`;
+ $("progressBar").style.width=`${index/tasks.length*100}%`;
+ $("missionTag").textContent=`UZAY GÖREVİ ${String(index+1).padStart(2,"0")}`;
+ $("question").textContent=t.q;$("description").textContent=t.d;
+ $("exampleLabel").textContent="İLETİŞİM MESAJI";
+ $("sentence").innerHTML=t.s.replace("|",'<span class="cursor"></span>');
+ $("hint").textContent=t.h;
+ $("feedback").className="feedback";$("feedback").textContent="Doğru tuşu seç. Ekrandaki tuşlara tıklayabilir veya klavyeni kullanabilirsin.";
+ $("nextBtn").disabled=true;$("nextBtn").textContent=index===tasks.length-1?"Sonucu Gör →":"Sonraki Görev →";
+ document.querySelectorAll(".key").forEach(k=>k.classList.remove("correct","wrong"));
+}
+function celebrate(){
+ const layer=$("celebration");layer.innerHTML="";layer.classList.remove("hidden");
+ const colors=["#ffdf59","#ff68b7","#48e9f5","#8dffad","#b8a2ff","#ff9b54"];
+ for(let i=0;i<34;i++){
+  const p=document.createElement("span");p.className="confetti";
+  p.style.setProperty("--x",`${35+Math.random()*30}%`);
+  p.style.setProperty("--y",`${25+Math.random()*35}%`);
+  p.style.setProperty("--dx",`${(Math.random()-.5)*620}px`);
+  p.style.setProperty("--dy",`${(Math.random()-.65)*480}px`);
+  p.style.setProperty("--r",`${Math.random()*180}deg`);
+  p.style.setProperty("--c",colors[i%colors.length]);layer.appendChild(p);
+ }
+ const banner=$("successBanner");
+ const messages=["⭐ HARİKA! ⭐","🚀 BAŞARDIN! 🚀","✨ SÜPERSİN! ✨","🌟 MÜKEMMEL! 🌟"];
+ banner.textContent=messages[index%messages.length];banner.classList.remove("show");void banner.offsetWidth;banner.classList.add("show");
+ const pop=document.createElement("div");pop.className="score-pop";pop.textContent="+10 ✦";document.querySelector(".game").appendChild(pop);
+ setTimeout(()=>{layer.classList.add("hidden");layer.innerHTML="";banner.classList.remove("show");pop.remove()},1300);
+}
+function choose(key){
+ if(locked)return;
+ const t=tasks[index],btn=document.querySelector(`[data-key="${key}"]`);
+ document.querySelectorAll(".key").forEach(k=>k.classList.remove("wrong"));
+ if(key===t.key){
+  locked=true;score+=10;btn.classList.add("correct");
+  $("score").textContent=`${score} ✦`;
+  $("progressBar").style.width=`${(index+1)/tasks.length*100}%`;
+  $("feedback").className="feedback good";
+  $("feedback").textContent="DOĞRU CEVAP! Harika iş! +10 yıldız kazandın! ✨";
+  $("nextBtn").disabled=false;
+  celebrate();
+ }else{
+  btn.classList.add("wrong");$("feedback").className="feedback bad";
+  $("feedback").textContent="Bir daha dene! İpucunu oku ve başka bir tuş seç. 💫";
+ }
+}
+document.querySelectorAll(".key").forEach(b=>b.addEventListener("click",()=>choose(b.dataset.key)));
+document.addEventListener("keydown",e=>{
+ if($("startOverlay").classList.contains("hidden")===false){if(e.key==="Enter")startGame();return;}
+ if(!locked){if(e.code==="Space"){e.preventDefault();choose("SPACE")}else if(e.key==="Enter")choose("ENTER");else if(e.key==="Backspace")choose("BACKSPACE");else if(e.key==="Shift")choose("SHIFT");else if(e.key==="CapsLock")choose("CAPS LOCK");}
+});
+function startGame(){$("startOverlay").classList.add("hidden");render();}
+$("startBtn").addEventListener("click",startGame);
+$("nextBtn").addEventListener("click",()=>{if($("nextBtn").disabled)return;if(index===tasks.length-1){$("endOverlay").classList.remove("hidden");$("finalText").textContent=`15 görevi tamamladın ve ${score} puan topladın. Harika bir uzay kaşifisin!`;return;}index++;render();});
+$("restartBtn").addEventListener("click",()=>{index=0;score=0;$("endOverlay").classList.add("hidden");render();});
+$("soundBtn").addEventListener("click",()=>{soundOn=!soundOn;$("soundBtn").textContent=soundOn?"♫̸":"♫";$("soundBtn").title=soundOn?"Ses göstergesi açık":"Ses kapalı";});
+$("fullBtn").addEventListener("click",()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.();});
+</script>
+</body></html>
